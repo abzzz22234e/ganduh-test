@@ -1,2 +1,0 @@
-# ganduh-test
-idk
