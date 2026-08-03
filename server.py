@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-OPENROUTER_MODEL = "mistralai/mistral-nemo"
+OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct"
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
