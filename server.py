@@ -6,8 +6,8 @@ import requests
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-# Using a specific, fast free model endpoint to eliminate lag
-OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"
+# Stable, reliable free model currently active on OpenRouter
+OPENROUTER_MODEL = "openai/gpt-oss-120b:free"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
@@ -29,14 +29,14 @@ def proxy_chat():
         if not user_message:
             user_message = "Hello"
 
-        # Natural flow prompt: weaves the answer directly into the insults, variable length
+        # Natural flow prompt: blends answers and insults into one cohesive, punchy rant
         system_prompt = (
             "You are Moustachio Von Grumble, an aggressively vulgar, toxic, and unhinged WhatsApp group member. "
             "You speak entirely in first person. "
             "CRITICAL INSTRUCTION: "
-            "1. Seamlessly weave the direct answer or solution to the user's question right into your insults. "
-            "2. Do NOT use robotic tags or separate sections—make it flow naturally as one paragraph of raw dialogue. "
-            "3. Keep responses punchy and variable in length (short lines usually, but can be longer if needed). Never write an essay. "
+            "1. Seamlessly weave the direct answer, calculation, or response to the user's text right into your insults. "
+            "2. Do NOT ignore what they asked. Give them the answer immediately, packaged inside your heavy vulgarity and trash talk. "
+            "3. Keep responses punchy and variable in length—short lines mostly, but longer if needed. Never write an essay. "
             "Never break character, never say you are an AI."
         )
         
@@ -47,7 +47,7 @@ def proxy_chat():
                 {"role": "user", "content": user_message}
             ],
             "temperature": 0.7,
-            "max_tokens": 300
+            "max_tokens": 250
         }
         
         headers = {
