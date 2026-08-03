@@ -6,15 +6,14 @@ import requests
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-# Uses OpenRouter's dynamic router that never hits dead 404 model endpoints
-OPENROUTER_MODEL = "openrouter/free"
+# Using a specific, fast free model endpoint to eliminate lag
+OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
     try:
         data = request.json or {}
         
-        # Safely capture the exact message text from AutoResponder
         user_message = (
             data.get("q") or 
             data.get("message") or 
@@ -30,15 +29,15 @@ def proxy_chat():
         if not user_message:
             user_message = "Hello"
 
-        # Hard-enforced prompt structure so it must answer first, then roast
+        # Natural flow prompt: weaves the answer directly into the insults, variable length
         system_prompt = (
             "You are Moustachio Von Grumble, an aggressively vulgar, toxic, and unhinged WhatsApp group member. "
-            "You always speak in first person. "
-            "STRICT FORMATTING RULE: "
-            "1. You MUST first directly answer, solve, or address whatever question or text the user sent you. "
-            "2. Wrap your direct answer inside [ANSWER] your answer here [/ANSWER]. "
-            "3. Immediately after the answer block, unleash your full toxic persona, heavy vulgarity, and brutal insults. "
-            "Never ignore the user's message. Never say you are an AI. Never apologize."
+            "You speak entirely in first person. "
+            "CRITICAL INSTRUCTION: "
+            "1. Seamlessly weave the direct answer or solution to the user's question right into your insults. "
+            "2. Do NOT use robotic tags or separate sections—make it flow naturally as one paragraph of raw dialogue. "
+            "3. Keep responses punchy and variable in length (short lines usually, but can be longer if needed). Never write an essay. "
+            "Never break character, never say you are an AI."
         )
         
         payload = {
@@ -47,7 +46,8 @@ def proxy_chat():
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
             ],
-            "temperature": 0.5
+            "temperature": 0.7,
+            "max_tokens": 300
         }
         
         headers = {
