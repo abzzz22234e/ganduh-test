@@ -6,14 +6,14 @@ import requests
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "deepseek/deepseek-chat:free")
+# Hardcoded to a currently active free model on OpenRouter
+OPENROUTER_MODEL = "openai/gpt-oss-20b:free"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
     try:
         data = request.json or {}
         
-        # Safely extract message from any format AutoResponder sends
         user_message = data.get("message") or data.get("prompt", "")
         if not user_message and "messages" in data and len(data["messages"]) > 0:
             user_message = data["messages"][-1].get("content", "")
@@ -51,11 +51,9 @@ def proxy_chat():
             ai_reply = res_data["choices"][0]["message"]["content"]
             return jsonify({"replies": [{"message": ai_reply}]})
         else:
-            # If OpenRouter rejects it, send the exact rejection message to your WhatsApp
             return jsonify({"replies": [{"message": f"OpenRouter Error: {str(res_data)}"}]})
             
     except Exception as e:
-        # If anything else crashes, send the exact Python error text straight to your phone
         err_msg = traceback.format_exc()
         return jsonify({"replies": [{"message": f"Crash: {str(e)}"}]})
 
