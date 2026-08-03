@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 # Using a fast, reliable free model that processes logic and answers instantly
-OPENROUTER_MODEL = "google/gemma-2-9b-it:free"
+OPENROUTER_MODEL = "meta-llama/llama-3-8b-instruct:free"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
