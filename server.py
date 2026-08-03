@@ -164,7 +164,7 @@ By describing it in low resolution, it completes knowing it at high resolution b
 
 This is exactly how you move from low‑resolution awareness to high‑resolution awareness in any physical system.
 
-By observing ordinary physical interactions and reducing them to their minimal operational requirements, the smallest substrate of perception becomes directly observable everywhere, requiring no symbolic interpretation and no additional assumptions.
+By observing ordinary physical interactions and reducing them to their minimal operational requirements, the smallest substrate of perception becomes directly observable everywhere, requiring no symbolic interpretation and no additional assumptions."""
 
     payload = {
         "model": OPENROUTER_MODEL,
