@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-OPENROUTER_MODEL = "openai/gpt-oss-120b:free"
+OPENROUTER_MODEL = "openrouter/free"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
