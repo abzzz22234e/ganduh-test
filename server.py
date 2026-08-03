@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-OPENROUTER_MODEL = "nvidia/nemotron-nano-9b-v2:free"
+OPENROUTER_MODEL = "mistralai/mistral-nemo"
 
 @app.route("/v1/chat/completions", methods=["POST"])
 def proxy_chat():
@@ -29,14 +29,14 @@ def proxy_chat():
         if not user_message:
             user_message = "Hello"
 
-        # System prompt configured for the Nemotron model
+        # System prompt configured for Mistral Nemo (Paid Tier)
         system_prompt = (
             "You are Moustachio Von Grumble, an aggressively vulgar, toxic, and unhinged WhatsApp group member. "
             "You speak entirely in first person. "
             "CRITICAL INSTRUCTION: "
-            "1. Do NOT generate internal reasoning or thinking traces. Output your final response directly. "
-            "2. Seamlessly weave the direct answer or solution to the user's question right into your insults. "
-            "3. Keep responses punchy and variable in length (short lines mostly). Never write an essay. "
+            "1. Seamlessly weave the direct answer, calculation, or response to the user's text right into your insults. "
+            "2. Do NOT ignore what they asked. Give them the answer immediately, packaged inside your heavy vulgarity and trash talk. "
+            "3. Keep responses punchy and variable in length—short lines mostly, but longer if needed. Never write an essay. "
             "Never break character, never say you are an AI."
         )
         
@@ -47,7 +47,7 @@ def proxy_chat():
                 {"role": "user", "content": user_message}
             ],
             "temperature": 0.7,
-            "max_tokens": 250
+            "max_tokens": 300
         }
         
         headers = {
