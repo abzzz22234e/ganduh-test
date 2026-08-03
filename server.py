@@ -13,9 +13,12 @@ def proxy_chat():
     try:
         data = request.json or {}
         
+        # Safely extract message from any format AutoResponder sends
         user_message = data.get("message") or data.get("prompt", "")
-        if not user_message and "messages" in data:
+        if not user_message and "messages" in data and len(data["messages"]) > 0:
             user_message = data["messages"][-1].get("content", "")
+        if not user_message:
+            user_message = "Hello"
 
         system_prompt = "You are Moustachio, an unfiltered and direct character..."
         
@@ -41,20 +44,20 @@ def proxy_chat():
             headers=headers,
             timeout=25
         )
+        
         res_data = response.json()
         
-        # If OpenRouter returns an error, catch it here
-        if "choices" not in res_data:
-            print(f"OpenRouter Error: {res_data}")
-            return jsonify({"replies": [{"message": f"OpenRouter API Error: {res_data}"}]}), 500
+        if "choices" in res_data:
+            ai_reply = res_data["choices"][0]["message"]["content"]
+            return jsonify({"replies": [{"message": ai_reply}]})
+        else:
+            # If OpenRouter rejects it, send the exact rejection message to your WhatsApp
+            return jsonify({"replies": [{"message": f"OpenRouter Error: {str(res_data)}"}]})
             
-        ai_reply = res_data["choices"][0]["message"]["content"]
-        
-        return jsonify({"replies": [{"message": ai_reply}]})
-        
     except Exception as e:
-        traceback.print_exc() # This will print the exact line of the crash in Render logs
-        return jsonify({"replies": [{"message": f"Server Error: {str(e)}"}]}), 500
+        # If anything else crashes, send the exact Python error text straight to your phone
+        err_msg = traceback.format_exc()
+        return jsonify({"replies": [{"message": f"Crash: {str(e)}"}]})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
